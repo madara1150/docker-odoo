@@ -47,4 +47,4 @@ volumes:
   pgadmin-data: {}
 
   # odoo attach
-  # odoo shell -d odoo --db_host=db -w odoo17@2023 --db_user=odoo
+  # odoo shell -d odoo --db_host=db -w odoo123 --db_user=odoo

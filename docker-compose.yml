@@ -1,0 +1,50 @@
+version: '2'
+services:
+  db:
+    image: postgres:16
+    user: root 
+    environment:
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo123
+      - POSTGRES_DB=postgres
+    restart: always             
+    volumes:
+      - ./postgresql:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+      
+  # odoo16
+  odoo16:
+    image: odoo:16
+    user: root 
+    depends_on:
+      - db
+    ports:
+      - "10017:8069"
+      - "20017:8072"
+    tty: true
+    command: -- --dev=all
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo123
+    volumes:
+      - ./addons:/mnt/extra-addons
+      - ./etc:/etc/odoo
+    restart: always   
+
+  # PG-admin         
+  pgadmin:
+    image: elestio/pgadmin
+    ports:
+      - "5050:80"  
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@example.com
+      - PGADMIN_DEFAULT_PASSWORD=password  
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin  
+volumes:
+  pgadmin-data: {}
+
+  # odoo attach
+  # odoo shell -d odoo --db_host=db -w odoo17@2023 --db_user=odoo
